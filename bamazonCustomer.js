@@ -52,12 +52,18 @@ function readProducts() {
                     {
                         item_id: response.itemID
                     }], function (err, data) {
-                        console.log('Your transaction cost: $' + parseInt(response.amount) * res[0].price);
-                        connection.end();
+                        var product_sales = parseInt(response.amount) * res[0].price;
+                        console.log('Your transaction cost: $' + product_sales);
+                        let updateSales = 'UPDATE products SET product_sales=' + product_sales + ' WHERE item_id=' + parseInt(response.itemID);
+                        connection.query(updateSales, function(err, data){
+                            if (err) throw err;
+
+                            connection.end();
+                        })
                     })
 
                 } else {
-                    console.log("I'm sorry, we don't have enough of that item to make the purchase.\r\nHave a nice day")
+                    console.log("I'm sorry, we don't have enough of that item to make the sale.\r\nHave a nice day")
                 }
             })
         })

@@ -80,7 +80,7 @@ function addNewProduct() {
 function addToInventory() {
     connection.query("SELECT * FROM products", function (err, data) {
         for (var i = 0; i < data.length; i++) {
-            console.log(data[i].item_id + " | " + data[i].product_name + " | " + data[i].department_name + " | " + data[i].price + " | " + data[i].stock_quantity);
+            console.log(data[i].item_id + " | " + data[i].product_name + " | " + data[i].department_name + " | " + data[i].price + " | " + data[i].stock_quantity + " | " + data[i].product_sales);
         };
         console.log('==========================================')
         inquirer.prompt([
@@ -112,7 +112,7 @@ function addToInventory() {
 function readLowProducts() {
     connection.query("SELECT * FROM products WHERE stock_quantity < 5", function (err, response) {
         for (var i = 0; i < response.length; i++) {
-            console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity);
+            console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity + " | " + data[i].product_sales);
         };
         console.log('==========================================')
         connection.end();
@@ -122,7 +122,7 @@ function readLowProducts() {
 function readProducts() {
     connection.query("SELECT * FROM products", function (err, response) {
         for (var i = 0; i < response.length; i++) {
-            console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity);
+            console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity + " | " + data[i].product_sales);
         };
         console.log('==========================================')
         connection.end();
