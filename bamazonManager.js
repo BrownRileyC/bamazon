@@ -35,6 +35,7 @@ connection.connect(function (err) {
                 break;
             default:
                 console.log('What did you do?');
+                connection.end();
         }
     })
 });

@@ -1,6 +1,7 @@
 var mysql = require('mysql');
 var inquirer = require('inquirer');
 require('dotenv').config();
+const Table = require('cli-table');
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -17,11 +18,15 @@ connection.connect(function (err) {
 });
 
 function readProducts() {
+    let table = new Table({
+        head: ['Item ID', 'Dept Name','Price','Quantity'],
+        colWidths: [10, 20, 20, 20, 20]
+    });
     connection.query("SELECT * FROM products", function (err, response) {
         for (var i = 0; i < response.length; i++) {
-            console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity);
+            table.push([response[i].item_id, response[i].product_name, response[i].department_name, "$"+response[i].price, response[i].stock_quantity])
         };
-        console.log('==========================================')
+        console.log(table.toString())
         inquirer.prompt([
             {
                 type: 'input',
@@ -42,10 +47,7 @@ function readProducts() {
             }
         ]).then(function (response) {
             connection.query("SELECT * FROM products WHERE ?", { item_id: parseInt(response.itemID) }, function (err, res) {
-                console.log(res[0].stock_quantity);
-                console.log(parseInt(response.amount));
                 if (res[0].stock_quantity > parseInt(response.amount)) {
-                    console.log('I made it inside the if');
                     connection.query('UPDATE products SET ? WHERE ?', [{
                         stock_quantity: (res[0].stock_quantity - parseInt(response.amount))
                     },
@@ -65,6 +67,7 @@ function readProducts() {
 
                 } else {
                     console.log("I'm sorry, we don't have enough of that item to make the sale.\r\nHave a nice day")
+                    connection.end();
                 }
             })
         })
