@@ -52,10 +52,11 @@ function readProducts() {
                     {
                         item_id: response.itemID
                     }], function (err, data) {
-                        var product_sales = parseInt(response.amount) * res[0].price;
-                        console.log('Your transaction cost: $' + product_sales);
+                        let current_sale = parseInt(response.amount) * res[0].price;
+                        let product_sales = res[0].product_sales + current_sale;
+                        console.log('Your transaction cost: $' + current_sale);
                         let updateSales = 'UPDATE products SET product_sales=' + product_sales + ' WHERE item_id=' + parseInt(response.itemID);
-                        connection.query(updateSales, function(err, data){
+                        connection.query(updateSales, function (err, data) {
                             if (err) throw err;
 
                             connection.end();

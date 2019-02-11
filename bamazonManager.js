@@ -1,6 +1,7 @@
 var mysql = require('mysql');
 var inquirer = require('inquirer');
 require('dotenv').config();
+const Table = require('cli-table');
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -69,7 +70,6 @@ function addNewProduct() {
             }
         ]).then(function (response) {
             let insert = "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ('"+response.product_name + "', '" + response.product_dept + "', " + parseFloat(response.product_price) + ", " + parseInt(response.product_quantity) + ")";
-            console.log(insert);
             connection.query(insert, function (err, response) {
                 if (err) throw err;
                 readProducts();
@@ -78,16 +78,22 @@ function addNewProduct() {
 }
 
 function addToInventory() {
+    let table = new Table({
+        head: ['Item ID', 'Dept Name','Price','Quantity','Product Sales'],
+        colWidths: [10, 20, 20, 20, 20, 20]
+    });
     connection.query("SELECT * FROM products", function (err, data) {
         for (var i = 0; i < data.length; i++) {
-            console.log(data[i].item_id + " | " + data[i].product_name + " | " + data[i].department_name + " | " + data[i].price + " | " + data[i].stock_quantity + " | " + data[i].product_sales);
+            table.push([data[i].item_id, data[i].product_name, data[i].department_name, "$"+data[i].price, data[i].stock_quantity, "$"+data[i].product_sales]);
+            // console.log(data[i].item_id + " | " + data[i].product_name + " | " + data[i].department_name + " | " + data[i].price + " | " + data[i].stock_quantity + " | " + data[i].product_sales);
         };
-        console.log('==========================================')
+        // console.log('==========================================')
+        console.log(table.toString())
         inquirer.prompt([
             {
                 type: 'input',
                 name: 'itemID',
-                message: 'Which item did we recieve in shipment?'
+                message: 'What is the id of the item we recieved in shipment?'
             },
             {
                 type: 'input',
@@ -110,21 +116,34 @@ function addToInventory() {
 };
 
 function readLowProducts() {
+    let table = new Table({
+        head: ['Item ID', 'Dept Name','Price','Quantity','Product Sales'],
+        colWidths: [10, 20, 20, 20, 20, 20]
+    });
     connection.query("SELECT * FROM products WHERE stock_quantity < 5", function (err, response) {
         for (var i = 0; i < response.length; i++) {
-            console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity + " | " + data[i].product_sales);
+            table.push([response[i].item_id, response[i].product_name, response[i].department_name, "$"+response[i].price, response[i].stock_quantity, "$"+response[i].product_sales]);
+            // console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity + " | " + data[i].product_sales);
         };
-        console.log('==========================================')
+        // console.log('==========================================')
+        console.log(table.toString())
         connection.end();
     })
 };
 
 function readProducts() {
+    let table = new Table({
+        head: ['Item ID', 'Dept Name','Price','Quantity','Product Sales'],
+        colWidths: [10, 20, 20, 20, 20, 20]
+    });
     connection.query("SELECT * FROM products", function (err, response) {
         for (var i = 0; i < response.length; i++) {
-            console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity + " | " + data[i].product_sales);
+            table.push([response[i].item_id, response[i].product_name, response[i].department_name, "$"+response[i].price, response[i].stock_quantity, "$"+response[i].product_sales]);
+
+            // console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity + " | " + data[i].product_sales);
         };
-        console.log('==========================================')
+        // console.log('==========================================')
+        console.log(table.toString())
         connection.end();
     });
 };
