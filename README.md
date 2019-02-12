@@ -5,9 +5,9 @@
 In order to run this application you will need MySql and node.js.
 You can find those resources by following these links:
     
-    --https://nodejs.org/en/
+    https://nodejs.org/en/
     
-    --https://www.mysql.com/downloads/
+    https://www.mysql.com/downloads/
 
 First you must clone down the repo, next you will need to enter the command 'npm install' to install the various node modules used for this application.
 
