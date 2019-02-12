@@ -11,6 +11,14 @@ var connection = mysql.createConnection({
     database: 'bamazon_db'
 });
 
+function numberValidation(num) {
+    if (!isNaN(num)){
+        return true
+    } else {
+        return 'Please enter a number instead'
+    }
+};
+
 connection.connect(function (err) {
     if (err) throw err;
     console.log('Connected');
@@ -46,9 +54,7 @@ function addDepartment() {
                 message: 'What is the overhead on the new department?',
                 type: 'input',
                 name: 'overhead',
-                validate: function (name) {
-                    return !isNaN(name);
-                }
+                validate: numberValidation
             }
         ]).then(function (response) {
             let insert = "INSERT INTO departments (department_name, overhead) VALUES ('" + response.dept_name + "', " + parseFloat(response.overhead) + ")";
@@ -82,7 +88,7 @@ function viewSpending() {
     connection.query(spendingQuery, function(err, res){
         for (var k = 0; k < res.length; k++){
             let profit = parseFloat(res[k].department_sales) - parseFloat(res[k].overhead);
-            table.push([res[k].id, res[k].department_name, res[k].overhead, res[k].department_sales, profit]);
+            table.push([res[k].id, res[k].department_name, res[k].overhead, res[k].department_sales, profit.toFixed(2)]);
         };
         console.log(table.toString());
         connection.end();

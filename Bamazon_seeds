@@ -1,0 +1,46 @@
+use bamazon_db;
+
+insert into products (product_name, department_name, price, stock_quantity)
+values ('Sofa', 'Furniture',999.99, 4);
+
+insert into products (product_name, department_name, price, stock_quantity)
+values ('Loveseat', 'Furniture',457.89, 15);
+
+insert into products (product_name, department_name, price, stock_quantity)
+values ('Dune', 'Books',11.99, 4);
+
+insert into products (product_name, department_name, price, stock_quantity)
+values ('Harry Potter and the Sorcerer Stone', 'Books',12.99, 400);
+
+insert into products (product_name, department_name, price, stock_quantity)
+values ('Meow Mix', 'Pet Care', 15.99, 94);
+
+insert into products (product_name, department_name, price, stock_quantity)
+values ('Coffee', 'Groceries', 1.99, 500);
+
+insert into products (product_name, department_name, price, stock_quantity)
+values ('Cookies', 'Groceries', 5.99, 16);
+
+insert into products (product_name, department_name, price, stock_quantity)
+values ('DogfishHead 90 minute IPA', 'Groceries', 12.99, 6);
+
+insert into products (product_name, department_name, price, stock_quantity)
+values ('Daisy seeds', 'Gardening', 9.99, 4);
+
+insert into products (product_name, department_name, price, stock_quantity)
+values ('Shovel', 'Gardening', 19.99, 4);
+
+insert into departments (department_name, overhead)
+values ('Books', 2000);
+
+insert into departments (department_name, overhead)
+values ('Gardening', 2000);
+
+insert into departments (department_name, overhead)
+values ('Groceries', 2000);
+
+insert into departments (department_name, overhead)
+values ('Furniture', 2000);
+
+insert into departments (department_name, overhead)
+values ('Pet Care', 2000);

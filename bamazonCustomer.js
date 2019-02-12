@@ -17,9 +17,17 @@ connection.connect(function (err) {
     readProducts();
 });
 
+function numberValidation(num) {
+    if (!isNaN(num)){
+        return true
+    } else {
+        return 'Please enter a number instead'
+    }
+};
+
 function readProducts() {
     let table = new Table({
-        head: ['Item ID', 'Dept Name','Price','Quantity'],
+        head: ['Item ID', 'Item', 'Dept Name','Price','Quantity'],
         colWidths: [10, 20, 20, 20, 20]
     });
     connection.query("SELECT * FROM products", function (err, response) {
@@ -31,19 +39,14 @@ function readProducts() {
             {
                 type: 'input',
                 name: 'itemID',
-                // choices: function () {
-                //     var idArray = [];
-                //     for (var i = 0; i < response.length; i++) {
-                //         idArray.push(response[i].item_id)
-                //     }
-                //     return idArray;
-                // },
-                message: 'What is the id of the item you are interested in?'
+                message: 'What is the id of the item you are interested in?',
+                validate: numberValidation
             },
             {
                 type: 'input',
                 name: 'amount',
-                message: 'How many of that item would you like to order?'
+                message: 'How many of that item would you like to order?',
+                validate: numberValidation
             }
         ]).then(function (response) {
             connection.query("SELECT * FROM products WHERE ?", { item_id: parseInt(response.itemID) }, function (err, res) {
@@ -56,7 +59,7 @@ function readProducts() {
                     }], function (err, data) {
                         let current_sale = parseInt(response.amount) * res[0].price;
                         let product_sales = res[0].product_sales + current_sale;
-                        console.log('Your transaction cost: $' + current_sale);
+                        console.log('Your transaction cost: $' + current_sale.toFixed(2));
                         let updateSales = 'UPDATE products SET product_sales=' + product_sales + ' WHERE item_id=' + parseInt(response.itemID);
                         connection.query(updateSales, function (err, data) {
                             if (err) throw err;

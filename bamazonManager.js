@@ -11,6 +11,14 @@ var connection = mysql.createConnection({
     database: 'bamazon_db'
 });
 
+function numberValidation(num) {
+    if (!isNaN(num)){
+        return true
+    } else {
+        return 'Please enter a number instead'
+    }
+};
+
 connection.connect(function (err) {
     if (err) throw err;
     console.log('Connected');
@@ -57,17 +65,13 @@ function addNewProduct() {
                 message: 'What is the price for the item?',
                 type: 'input',
                 name: 'product_price',
-                validate: function (name) {
-                    return !isNaN(name);
-                }
+                validate: numberValidation
             },
             {
                 message: 'How many of the item are being added to the inventory?',
                 type: 'input',
                 name: 'product_quantity',
-                validate: function (name) {
-                    return !isNaN(name);
-                }
+                validate: numberValidation
             }
         ]).then(function (response) {
             let insert = "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ('"+response.product_name + "', '" + response.product_dept + "', " + parseFloat(response.product_price) + ", " + parseInt(response.product_quantity) + ")";
@@ -80,26 +84,26 @@ function addNewProduct() {
 
 function addToInventory() {
     let table = new Table({
-        head: ['Item ID', 'Dept Name','Price','Quantity','Product Sales'],
-        colWidths: [10, 20, 20, 20, 20, 20]
+        head: ['Item ID', 'Item', 'Dept Name','Price','Quantity','Product Sales'],
+        colWidths: [10, 25, 15, 15, 15, 15]
     });
     connection.query("SELECT * FROM products", function (err, data) {
         for (var i = 0; i < data.length; i++) {
             table.push([data[i].item_id, data[i].product_name, data[i].department_name, "$"+data[i].price, data[i].stock_quantity, "$"+data[i].product_sales]);
-            // console.log(data[i].item_id + " | " + data[i].product_name + " | " + data[i].department_name + " | " + data[i].price + " | " + data[i].stock_quantity + " | " + data[i].product_sales);
         };
-        // console.log('==========================================')
         console.log(table.toString())
         inquirer.prompt([
             {
                 type: 'input',
                 name: 'itemID',
-                message: 'What is the id of the item we recieved in shipment?'
+                message: 'What is the id of the item we recieved in shipment?',
+                validate: numberValidation
             },
             {
                 type: 'input',
                 name: 'amount',
-                message: 'How many did we recieve?'
+                message: 'How many did we recieve?',
+                validate: numberValidation
             }
         ]).then(function (response) {
             connection.query('UPDATE products SET ? WHERE ?', [{
@@ -118,15 +122,13 @@ function addToInventory() {
 
 function readLowProducts() {
     let table = new Table({
-        head: ['Item ID', 'Dept Name','Price','Quantity','Product Sales'],
-        colWidths: [10, 20, 20, 20, 20, 20]
+        head: ['Item ID', 'Item', 'Dept Name','Price','Quantity','Product Sales'],
+        colWidths: [10, 25, 15, 15, 15, 15]
     });
     connection.query("SELECT * FROM products WHERE stock_quantity < 5", function (err, response) {
         for (var i = 0; i < response.length; i++) {
             table.push([response[i].item_id, response[i].product_name, response[i].department_name, "$"+response[i].price, response[i].stock_quantity, "$"+response[i].product_sales]);
-            // console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity + " | " + data[i].product_sales);
         };
-        // console.log('==========================================')
         console.log(table.toString())
         connection.end();
     })
@@ -134,16 +136,13 @@ function readLowProducts() {
 
 function readProducts() {
     let table = new Table({
-        head: ['Item ID', 'Dept Name','Price','Quantity','Product Sales'],
-        colWidths: [10, 20, 20, 20, 20, 20]
+        head: ['Item ID', 'Item', 'Dept Name','Price','Quantity','Product Sales'],
+        colWidths: [10, 25, 15, 15, 15, 15]
     });
     connection.query("SELECT * FROM products", function (err, response) {
         for (var i = 0; i < response.length; i++) {
             table.push([response[i].item_id, response[i].product_name, response[i].department_name, "$"+response[i].price, response[i].stock_quantity, "$"+response[i].product_sales]);
-
-            // console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity + " | " + data[i].product_sales);
         };
-        // console.log('==========================================')
         console.log(table.toString())
         connection.end();
     });

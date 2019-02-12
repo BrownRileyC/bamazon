@@ -1,0 +1,24 @@
+drop database if exists bamazon_db;
+
+create database bamazon_db;
+
+use bamazon_db;
+
+create table products (
+	item_id integer(10) auto_increment not null primary key,
+    product_name varchar(50) not null,
+    department_name varchar(50) default 'miscellaneous',
+    price float(10,2) default 0.00,
+    stock_quantity integer(10) not null,
+    product_sales float(10,2) default 0.00
+);
+
+create table departments (
+	id integer(30) auto_increment not null primary key,
+    department_name varchar(50) not null,
+    overhead decimal(10,2) not null
+);
+
+select * from products;
+
+select * from departments;
